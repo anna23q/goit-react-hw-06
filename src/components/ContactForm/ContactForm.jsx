@@ -4,6 +4,8 @@ import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 
 import css from './ContactForm.module.css';
+import { useDispatch } from 'react-redux';
+import { addContact } from '../../redux/contactsSlice.js';
 
 const UserSchema = Yup.object().shape({
   name: Yup.string()
@@ -16,14 +18,19 @@ const UserSchema = Yup.object().shape({
     .required('Number is required'),
 });
 
-export default function ContactForm({ onAdd }) {
+export default function ContactForm() {
+  const dispatch = useDispatch();
+
   const handeleSubmit = (values, actions) => {
     const newContact = {
       id: nanoid(),
       name: values.name,
       number: values.number,
     };
-    onAdd(newContact);
+    console.log('Dispatching action:', newContact);
+
+    dispatch(addContact(newContact));
+    // onAdd(newContact);
     actions.resetForm();
   };
 
@@ -68,46 +75,3 @@ export default function ContactForm({ onAdd }) {
     </Formik>
   );
 }
-// ======================= hands work =======================
-//   export default function ContactForm({ onAdd }) {
-//   const filedId = useId();
-//   // const nameId = useId();
-//   // const numberId = useId();
-//   const handeleSubmit = event => {
-//     event.preventDefault();
-//     onAdd({
-//       id: nanoid(),
-//       name: event.target.elements.name.value,
-//       number: event.target.elements.number.value,
-//     });
-//     event.target.reset();
-//   };
-//   return (
-//     <form className={css.form} onSubmit={handeleSubmit}>
-//       <label className={css.textLabel} htmlFor={`${filedId}-name`}>
-//         Name
-//       </label>
-//       <input
-//         className={css.input}
-//         placeholder="Your name"
-//         type="text"
-//         name="name"
-//         id={`${filedId}-name`}
-//       />
-//       <label className={css.textLabel} htmlFor={`${filedId}-number`}>
-//         Number
-//       </label>
-//       <input
-//         className={css.input}
-//         placeholder="Your number"
-//         type="tel"
-//         name="number"
-//         id={`${filedId}-number`}
-//       />
-//       <button className={css.button} type="submit">
-//         Add contact
-//       </button>
-//     </form>
-//   );
-// }
-// ======================= /hands work =======================
